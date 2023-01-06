@@ -40,47 +40,50 @@ else
 	if ! [[ $1 =~ $re ]] && [[ $2 =~ $re ]] && [[ $3 =~ $re ]] && [[ $4 =~ $re ]]; then
 		echo "Error. The arguments take a value from 1 to 6"
 	else
-		if [[ $1 -eq $2 || $3 -eq $4 ]]
-		then
+		if [[ $1 -eq $2 || $3 -eq $4 ]]; then
 			echo "Error. The font and background colors should not match."
 		else
 			end='\033[0m'
 			case $1 in
-					"1") p1=WHITE1;;
-					"2") p1=RED2;;
-					"3") p1=GREEN3;;
-					"4") p1=BLUE4;;
-					"5") p1=PURPLE5;;
-					"6") p1=BLACK6;;
+					"1") p1=$WHITE1;;
+					"2") p1=$RED2;;
+					"3") p1=$GREEN3;;
+					"4") p1=$BLUE4;;
+					"5") p1=$PURPLE5;;
+					"6") p1=$BLACK6;;
 					
 			esac
 
 			case $2 in
-					"1") p2=WHITEBG1;;
-					"2") p2=REDBG2;;
-					"3") p2=GREENBG3;;
-					"4") p2=BLUEBG4;;
-					"5") p2=PURPLEBG5;;
-					"6") p2=BLACKBG6;;
+					"1") p2=$WHITEBG1;;
+					"2") p2=$REDBG2;;
+					"3") p2=$GREENBG3;;
+					"4") p2=$BLUEBG4;;
+					"5") p2=$PURPLEBG5;;
+					"6") p2=$BLACKBG6;;
 					 
 			esac
 
 			case $3 in
-					"1") p3=WHITE1;;
-					"2") p3=RED2;;
-					"3") p3=GREEN3;;
-					"4") p3=BLUE4;;
-					"5") p3=PURPLE5;;
-					"6") p3=BLACK6;;
+					"1") p3=$WHITE1;;
+					"2") p3=$RED2;;
+					"3") p3=$GREEN3;;
+					"4") p3=$BLUE4;;
+					"5") p3=$PURPLE5;;
+					"6") p3=$BLACK6;;
 					
 			esac
 
 			case $4 in
-					"1") p4=WHITEBG1;;
-					"2") p4=REDBG2;;
-					"3") p4=GREENBG3;;
-					"4") p4=BLUEBG4;;
-					"5") p4=PURPLEBG5;;
-					"6") p4=BLACKBG6;;
+					"1") p4=$WHITEBG1;;
+					"2") p4=$REDBG2;;
+					"3") p4=$GREENBG3;;
+					"4") p4=$BLUEBG4;;
+					"5") p4=$PURPLEBG5;;
+					"6") p4=$BLACKBG6;;
 			esac
 			basic_info
+        
+        fi
+    fi
+fi
