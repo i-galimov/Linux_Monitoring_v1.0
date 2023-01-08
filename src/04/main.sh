@@ -51,7 +51,6 @@ else
 	export p_num2=$column1_font_color
 	export p_num3=$column2_background
 	export p_num4=$column2_font_color
-	flag="0"
 	re='(^[1-6]$)'
 	if ! [[ $p_num1 =~ $re ]] && [[ $p_num2 =~ $re ]] && [[ $p_num3 =~ $re ]] && [[ $p_num4 =~ $re ]]
 	then
