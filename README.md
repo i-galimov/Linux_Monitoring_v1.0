@@ -84,6 +84,21 @@ Write a bash script. The script is run with one parameter. It is a text paramete
 The script outputs the value of the parameter.  
 If the parameter is a number, the script must output an invalid input message.
 
+```
+#!/bin/bash
+
+if [[ $# == 1 ]]; then
+    value=$1
+    if [[ $value =~ [^0-9] ]]; then
+        echo "$value"
+    else
+        echo "Error, invalid input."
+    fi
+else
+    echo "Error, invalid number of arguments."
+fi
+```
+
 ## Part 2. System research
 
 Now you’re sure that you’re ready to get down to the initial idea. You quickly think of the information about the system you need to output and get to work.
