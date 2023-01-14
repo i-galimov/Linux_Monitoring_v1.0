@@ -85,6 +85,7 @@ The script outputs the value of the parameter.
 If the parameter is a number, the script must output an invalid input message.
 
 **== Solution ==**
+### [Task 01](https://github.com/i-galimov/Linux_Monitoring_v1.0/blob/main/src/01/main.sh) 
 ```
 #!/bin/bash
 
@@ -132,6 +133,7 @@ If the user agrees, create a file in the current directory containing the inform
 The file name must looks like: **DD_MM_YY_HH_MM_SS.status** (The time in the file name must indicate when the data was saved).
 
 **== Solution ==**
+### [Task 02](https://github.com/i-galimov/Linux_Monitoring_v1.0/blob/main/src/02/main.sh) 
 ```
 #!/bin/bash
 
@@ -191,6 +193,7 @@ If matching values are entered, there must be a message describing the problem a
 After the message output, the program should exit correctly.
 
 **== Solution ==**
+### [Task 03](https://github.com/i-galimov/Linux_Monitoring_v1.0/blob/main/src/03/main.sh) 
 ```
 #!/bin/bash
 
@@ -318,6 +321,7 @@ Column 2 background = default (red)
 Column 2 font color = default (blue)
 ```
 **== Solution ==**
+### [Task 04](https://github.com/i-galimov/Linux_Monitoring_v1.0/blob/main/src/04) 
 ```
 #!/bin/bash
 
@@ -496,6 +500,7 @@ etc up to 10
 Script execution time (in seconds) = 1.5
 ```
 **== Solution ==**
+### [Task 05](https://github.com/i-galimov/Linux_Monitoring_v1.0/blob/main/src/05/main.sh) 
 ```
 #!/bin/bash
 
