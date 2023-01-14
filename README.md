@@ -84,6 +84,7 @@ Write a bash script. The script is run with one parameter. It is a text paramete
 The script outputs the value of the parameter.  
 If the parameter is a number, the script must output an invalid input message.
 
+**== Solution ==**
 ```
 #!/bin/bash
 
@@ -130,6 +131,45 @@ Responses **Y** and **y** are considered positive, all others - negative.
 If the user agrees, create a file in the current directory containing the information that had been outputted.
 The file name must looks like: **DD_MM_YY_HH_MM_SS.status** (The time in the file name must indicate when the data was saved).
 
+**== Solution ==**
+```
+#!/bin/bash
+
+function basic_info { 
+	echo HOSTNAME'       ' = $HOSTNAME'                     '
+	echo TIMEZONE'       ' = $(timedatectl | awk 'NR == 4' | awk '{print $3}') UTC $(date +%-:::z)'          '
+	echo USER'           ' = $(whoami)'                      '
+	echo OS'             ' = $(cat /etc/issue | awk '{print $1,$2,$3}' | tr -s '\r\n')'           '
+	echo DATE'           ' = $(date +%d' '%B' '%Y' '%T)'     '
+	echo UPTIME'         ' = $(uptime -p | awk '{print $2,$3,$4,$5}')'                   '
+	echo UPTIME_SEC'     ' = $(cat /proc/uptime | awk '{print $1}')'                        '
+	echo IP'             ' = $(ip a | awk 'NR == 3' | awk '{print $2}')'                   '	
+	echo MASK'           ' = $(ifconfig | awk 'NR == 2' | awk '{print $2}')'                     '
+	echo GATEWAY'        ' = $(ip route | grep default | awk '{print $3}')'                      '
+	echo RAM_TOTAL'      ' = $(free --mega | awk 'NR == 2' | awk '{printf "%.3f GB", $2 / 1000}')'                      '
+	echo RAM_USED'       ' = $(free --mega | grep Mem | awk '{printf "%.3f GB", $3 / 1000}')'                      '
+	echo RAM_FREE'       ' = $(free --mega | grep Mem | awk '{printf "%.3f GB", $4 / 1000}')'                      '
+	echo SPACE_ROOT'     ' = $(df -m | awk 'NR == 3' | awk '{printf "%.2f MB", $2}')'                    '
+	echo SPACE_ROOT_USED = $(df -m | awk 'NR == 3' | awk '{printf "%.2f MB", $3}')'                    '
+	echo SPACE_ROOT_FREE = $(df -m | awk 'NR == 3' | awk '{printf "%.2f MB", $4}')'                    '
+}
+
+if [[ $# -eq 0 ]]; then 
+	basic_info
+	read -p "Do you want to save data into file? (Y/N): " user_answer
+	if [[ $user_answer = "Y" || $user_answer = "y" ]]; then
+		now_date=$(date "+%d_%m_%y_%H_%M_%S")
+		file_info="$now_date.status"
+		basic_info >> $file_info
+	echo "Your have a file $file_info with information!"
+	else 
+		echo "Attention. You did not save the information to a file!"
+	fi
+else
+	echo "Error. Invalid number of arguments."
+fi
+```
+
 ## Part 3. Visual output design for the system research script
 
 Everything is ready! But it looks so boring... We need to add more colours to this world!
@@ -149,6 +189,99 @@ Colour designations: (1 - white, 2 - red, 3 - green, 4 - blue, 5 - purple, 6 - b
 The font and background colours of one column must not match.  
 If matching values are entered, there must be a message describing the problem and offering to call the script again.
 After the message output, the program should exit correctly.
+
+**== Solution ==**
+```
+#!/bin/bash
+
+WHITE1="\033[107m"
+RED2="\033[41m"
+GREEN3="\033[42m"
+BLUE4="\033[44m"
+PURPLE5="\033[45m"
+BLACK6="\033[40m"
+
+WHITEBG1="\033[97m"
+REDBG2="\033[31m"
+GREENBG3="\033[32m"
+BLUEBG4="\033[34m"
+PURPLEBG5="\033[35m"
+BLACKBG6="\033[30m"
+
+function basic_info { 
+	echo -e $p1$p2 HOSTNAME'       ' = $p3$p4$HOSTNAME'                        '$end
+	echo -e $p1$p2 TIMEZONE'       ' = $p3$p4$(timedatectl | awk 'NR == 4' | awk '{print $3}') UTC $(date +%-:::z)'          '$end
+	echo -e $p1$p2 USER'           ' = $p3$p4$(whoami)'                        '$end
+	echo -e $p1$p2 OS'             ' = $p3$p4$(cat /etc/issue | awk '{print $1,$2,$3}' | tr -s '\r\n')'       '$end
+	echo -e $p1$p2 DATE'           ' = $p3$p4$(date +%d' '%B' '%Y' '%T)'       '$end
+	echo -e $p1$p2 UPTIME'         ' = $p3$p4$(uptime -p | awk '{print $2,$3,$4,$5}')'                   '$end
+	echo -e $p1$p2 UPTIME_SEC'     ' = $p3$p4$(cat /proc/uptime | awk '{print $1}')'                        '$end
+	echo -e $p1$p2 IP'             ' = $p3$p4$(ip a | awk 'NR == 3' | awk '{print $2}')'                   '$end
+	echo -e $p1$p2 MASK'           ' = $p3$p4$(ifconfig | awk 'NR == 2' | awk '{print $2}')'             '$end
+	echo -e $p1$p2 GATEWAY'        ' = $p3$p4$(ip route | grep default | awk '{print $3}')'                   '$end
+	echo -e $p1$p2 RAM_TOTAL'      ' = $p3$p4$(free --mega | awk 'NR == 2' | awk '{printf "%.3f GB", $2 / 1000}')'                      '$end
+	echo -e $p1$p2 RAM_USED'       ' = $p3$p4$(free --mega | grep Mem | awk '{printf "%.3f GB", $3 / 1000}')'                      '$end
+	echo -e $p1$p2 RAM_FREE'       ' = $p3$p4$(free --mega | grep Mem | awk '{printf "%.3f GB", $4 / 1000}')'                      '$end
+	echo -e $p1$p2 SPACE_ROOT'     ' = $p3$p4$(df -m | awk 'NR == 3' | awk '{printf "%.2f MB", $2}')'                     '$end
+	echo -e $p1$p2 SPACE_ROOT_USED = $p3$p4$(df -m | awk 'NR == 3' | awk '{printf "%.2f MB", $3}')'                       '$end
+	echo -e $p1$p2 SPACE_ROOT_FREE = $p3$p4$(df -m | awk 'NR == 3' | awk '{printf "%.2f MB", $4}')'                     '$end
+}
+
+if [[ $# -ne 4 ]]; then
+	echo "Error. Invalid number of arguments."
+else
+	re='(^[1-6]$)'
+	if ! [[ $1 =~ $re ]] && [[ $2 =~ $re ]] && [[ $3 =~ $re ]] && [[ $4 =~ $re ]]; then
+		echo "Error. The arguments take a value from 1 to 6"
+	else
+		if [[ $1 -eq $2 || $3 -eq $4 ]]; then
+			echo "Error. The font and background colors should not match."
+		else
+			end='\033[0m'
+			case $1 in
+					"1") p1=$WHITE1;;
+					"2") p1=$RED2;;
+					"3") p1=$GREEN3;;
+					"4") p1=$BLUE4;;
+					"5") p1=$PURPLE5;;
+					"6") p1=$BLACK6;;
+					
+			esac
+
+			case $2 in
+					"1") p2=$WHITEBG1;;
+					"2") p2=$REDBG2;;
+					"3") p2=$GREENBG3;;
+					"4") p2=$BLUEBG4;;
+					"5") p2=$PURPLEBG5;;
+					"6") p2=$BLACKBG6;;
+					 
+			esac
+
+			case $3 in
+					"1") p3=$WHITE1;;
+					"2") p3=$RED2;;
+					"3") p3=$GREEN3;;
+					"4") p3=$BLUE4;;
+					"5") p3=$PURPLE5;;
+					"6") p3=$BLACK6;;
+					
+			esac
+
+			case $4 in
+					"1") p4=$WHITEBG1;;
+					"2") p4=$REDBG2;;
+					"3") p4=$GREENBG3;;
+					"4") p4=$BLUEBG4;;
+					"5") p4=$PURPLEBG5;;
+					"6") p4=$BLACKBG6;;
+			esac
+			basic_info
+        
+        fi
+    fi
+fi
+```
 
 ## Part 4. Configuring visual output design for the system research script
 
@@ -183,6 +316,138 @@ Column 1 background = default (black)
 Column 1 font color = default (white)
 Column 2 background = default (red)
 Column 2 font color = default (blue)
+```
+**== Solution ==**
+```
+#!/bin/bash
+
+source ./conf.conf
+
+WHITE1="\033[107m"
+RED2="\033[41m"
+GREEN3="\033[42m"
+BLUE4="\033[44m"
+PURPLE5="\033[45m"
+BLACK6="\033[40m"
+
+WHITEBG1="\033[97m"
+REDBG2="\033[31m"
+GREENBG3="\033[32m"
+BLUEBG4="\033[34m"
+PURPLEBG5="\033[35m"
+BLACKBG6="\033[30m"
+
+function basic_info { 
+	echo -e $p1$p2 HOSTNAME'       ' = $p3$p4$HOSTNAME'                        '$end
+	echo -e $p1$p2 TIMEZONE'       ' = $p3$p4$(timedatectl | awk 'NR == 4' | awk '{print $3}') UTC $(date +%-:::z)'          '$end
+	echo -e $p1$p2 USER'           ' = $p3$p4$(whoami)'                        '$end
+	echo -e $p1$p2 OS'             ' = $p3$p4$(cat /etc/issue | awk '{print $1,$2,$3}' | tr -s '\r\n')'       '$end
+	echo -e $p1$p2 DATE'           ' = $p3$p4$(date +%d' '%B' '%Y' '%T)'       '$end
+	echo -e $p1$p2 UPTIME'         ' = $p3$p4$(uptime -p | awk '{print $2,$3,$4,$5}')'                   '$end
+	echo -e $p1$p2 UPTIME_SEC'     ' = $p3$p4$(cat /proc/uptime | awk '{print $1}')'                       '$end
+	echo -e $p1$p2 IP'             ' = $p3$p4$(ip a | awk 'NR == 3' | awk '{print $2}')'                   '$end
+	echo -e $p1$p2 MASK'           ' = $p3$p4$(ifconfig | awk 'NR == 2' | awk '{print $2}')'             '$end
+	echo -e $p1$p2 GATEWAY'        ' = $p3$p4$(ip route | grep default | awk '{print $3}')'                   '$end
+	echo -e $p1$p2 RAM_TOTAL'      ' = $p3$p4$(free --mega | awk 'NR == 2' | awk '{printf "%.3f GB", $2 / 1000}')'                      '$end
+	echo -e $p1$p2 RAM_USED'       ' = $p3$p4$(free --mega | grep Mem | awk '{printf "%.3f GB", $3 / 1000}')'                      '$end
+	echo -e $p1$p2 RAM_FREE'       ' = $p3$p4$(free --mega | grep Mem | awk '{printf "%.3f GB", $4 / 1000}')'                      '$end
+	echo -e $p1$p2 SPACE_ROOT'     ' = $p3$p4$(df -m | awk 'NR == 3' | awk '{printf "%.2f MB", $2}')'                     '$end
+	echo -e $p1$p2 SPACE_ROOT_USED = $p3$p4$(df -m | awk 'NR == 3' | awk '{printf "%.2f MB", $3}')'                       '$end
+	echo -e $p1$p2 SPACE_ROOT_FREE = $p3$p4$(df -m | awk 'NR == 3' | awk '{printf "%.2f MB", $4}')'                     '$end
+}
+
+function color_info {
+	echo ""
+	echo "Column 1 background = $column1_background ($p_num1_col)"
+	echo "Column 1 font color = $column1_font_color ($p_num2_col)"
+	echo "Column 2 background = $column2_background ($p_num3_col)"
+	echo "Column 2 font color = $column2_font_color ($p_num4_col)"
+}
+
+if  [ $# -ne 0 ]
+then
+	echo "Error. Invalid number of arguments."
+else
+	export p_num1=$column1_background
+	export p_num2=$column1_font_color
+	export p_num3=$column2_background
+	export p_num4=$column2_font_color
+	re='(^[1-6]$)'
+	if ! [[ $p_num1 =~ $re ]] && [[ $p_num2 =~ $re ]] && [[ $p_num3 =~ $re ]] && [[ $p_num4 =~ $re ]]
+	then
+		echo "Error. The arguments take a value from 1 to 6"
+	else
+		if [[ $p_num2 -eq $p_num1 || $p_num3 -eq $p_num4 ]]
+		then
+			echo "Error. The font and background colors should not match."
+		else
+		
+			end='\033[0m'
+			case $p_num1 in
+					"1") p1=$WHITEBG1; p_num1_col='white';;
+					"2") p1=$REDBG2; p_num1_col='red';;
+					"3") p1=$GREENBG3; p_num1_col='green';;
+					"4") p1=$BLUEBG4; p_num1_col='blue';;
+					"5") p1=$PURPLEBG5; p_num1_col='purple';;
+					"6") p1=$BLACKBG6; p_num1_col='black';;
+					*) p1=$BLACKBG6; p_num1_col='black'; flag1="1";;
+					
+			esac
+
+			case $p_num2 in
+					"1") p2=$WHITE1; p_num2_col='white';;
+					"2") p2=$RED2; p_num2_col='red';;
+					"3") p2=$GREEN3; p_num2_col='green';;
+					"4") p2=$BLUE4; p_num2_col='blue';;
+					"5") p2=$PURPLE5; p_num2_col='purple';;
+					"6") p2=$BLACK6; p_num2_col='black';;
+					*) p2=$RED2; p_num2_col='red'; flag2="2";;
+					 
+			esac
+
+			case $p_num3 in
+					"1") p3=$WHITEBG1; p_num3_col='white';;
+					"2") p3=$REDBG2; p_num3_col='red';;
+					"3") p3=$GREENBG3; p_num3_col='green';;
+					"4") p3=$BLUEBG4; p_num3_col='blue';;
+					"5") p3=$PURPLEBG5; p_num3_col='purple';;
+					"6") p3=$BLACKBG6; p_num3_col='black';;
+					*) p3=$BLACKBG6; p_num3_col='black'; flag3="3";;
+					
+			esac
+
+			case $p_num4 in
+					"1") p4=$WHITE1; p_num4_col='white';;
+					"2") p4=$RED2; p_num4_col='red';;
+					"3") p4=$GREEN3; p_num4_col='green';;
+					"4") p4=$BLUE4; p_num4_col='blue';;
+					"5") p4=$PURPLE5; p_num4_col='purple';;
+					"6") p4=$BLACK6; p_num4_col='black';;
+					*) p2=$RED2; p_num4_col='red'; flag4="4";;
+			esac
+
+			if [[ $flag1 -eq 1 ]]; then
+				echo -e "Error, column1_background take a value from 1 to 6. In the case error we use default value equel 6!\n" 
+				column1_background="default"
+			fi
+			if [[ $flag2 -eq 2 ]]; then
+				echo -e "Error, column1_font_color take a value from 1 to 6. In the case error we use default value equel 6!\n"
+				column1_font_color="default"
+			fi
+			if [[ $flag3 -eq 3 ]]; then
+				echo -e "Error, column2_background take a value from 1 to 6. In the case error we use default value equel 6!\n"
+				column2_background="default"
+			fi
+			if [[ $flag4 -eq 4 ]]; then
+				echo -e "Error, column2_font_color take a value from 1 to 6. In the case error we use default value equel 6!\n"
+				column2_font_color="default"
+			fi
+			basic_info
+			color_info 
+
+			fi
+		fi
+	fi
 ```
 
 ## Part 5. File system research
@@ -230,7 +495,79 @@ TOP 10 executable files of the maximum size arranged in descending order (path, 
 etc up to 10  
 Script execution time (in seconds) = 1.5
 ```
+**== Solution ==**
+```
+#!/bin/bash
 
+start=`date +%s`
+
+function count_folders {
+	echo "Total number of folders (including all nested ones) = $(find $1 -type d| wc -l)"
+	echo "TOP 5 folders of maximum size arranged in descending order (path and size):"
+	du -h $1 2>/dev/null | sort -hr | head -5 | awk 'BEGIN{i=1}{printf "%d - %s, %s\n", i, $2, $1; i++}'
+}
+
+function count_files {
+	echo "Total number of files = $(ls -laR $1 2>/dev/null | grep ^- | wc -l)"
+	echo "Number of:"
+	echo "Configuration files (with the .conf extension) = $(find $1 2>/dev/null -type f -name "*.conf" | wc -l | awk '{print $1}')"
+	echo "Text files = $(find $1 2>/dev/null -type f -name "*.txt" | wc -l | awk '{print $1}')"
+	echo "Executable files = $(find $1 2>/dev/null -type f -executable | wc -l | awk '{print $1}')"
+	echo "Log files (with the extension .log) = $(find $1 2>/dev/null -type f -name "*.log" | wc -l | awk '{print $1}')"
+	echo "Archive files = $(find $1 2>/dev/null -type f -name "*.zip" -o -name "*.7z" -o -name "*.rar" -o -name "*.tar" | wc -l | awk '{print $1}')"
+	echo "Symbolic links = $(find $1 2>/dev/null -type l | wc -l | awk '{print $1}')"
+	echo "TOP 10 files of maximum size arranged in descending order (path, size and type):"
+	for num in {1..10}
+	do
+		file_line=$(find $1 2>/dev/null -type f -exec du -h {} + | sort -rh | head -10 | sed "${num}q;d")
+		if ! [[ -z $file_line ]]; then
+			echo -n "$num - "
+			echo -n "$(echo $file_line | awk '{print $2}'), "
+			echo -n "$(echo $file_line | awk '{print $1}'), "
+			echo "$(echo $file_line | grep -m 1 -o -E "\.[^/.]+$" | awk -F . '{print $2}')"
+		fi
+	done
+}
+
+function ten_exec_files {
+	echo "TOP 10 executable files of the maximum size arranged in descending order (path, size and MD5 hash of file):"
+	for num in {1..10}
+	do
+		file_line=$(find $1 2>/dev/null -type f -executable -exec du -h {} + | sort -rh | head -10 | sed "${num}q;d")
+		if ! [[ -z $file_line ]]; then
+			echo -n "$num - "
+			echo -n "$(echo $file_line | awk '{print $2}'), "
+			echo -n "$(echo $file_line | awk '{print $1}'), "
+			path=$(echo $file_line | awk '{print $2}')
+			MD5=$(md5sum $path | awk '{print $1}')
+			echo "$MD5"
+		fi
+	done
+}
+
+function count_time {
+	end=`date +%s`
+	echo "Script execution time (in seconds) = $(($end-$1))"
+}
+
+
+if [[ $# == 1 ]]; then
+	if [[ -d $1 ]]; then
+		if [[ ${1: -1} = "/" ]]; then
+			count_folders $1
+			count_files $1
+			ten_exec_files $1
+			count_time $start
+		else
+			echo "Error. The '/'' character must be present at the end of the path."
+		fi
+	else
+		echo "Error. Directory not exist."
+	fi
+else
+	echo "Error. Invalid number of arguments."
+fi
+```
 
 ## Chapter IV
 
